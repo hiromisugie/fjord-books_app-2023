@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:postal_code, :address, :profile])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:postal_code, :address, :profile]) # アカウント作成時にpostal_code、address、profileを許可
     devise_parameter_sanitizer.permit(:account_update, keys: [:postal_code, :address, :profile]) # アカウント編集時にpostal_code、address、profileを許可
   end
 end
