@@ -25,6 +25,7 @@
             <li> <strong><%= current_user.email %></strong>としてログイン中</li>
             <li><%= link_to 'プロフィール編集', edit_user_registration_path %></li>
             <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+            <li><%= link_to 'ユーザー一覧', users_path %></li>
             <li><%= link_to t('views.common.title_index', name: i18n_pluralize(Book.model_name.human)), books_path %></li>
             <li><%= link_to t('views.common.new', name: Book.model_name.human.downcase), new_book_path %></li>
           <% else %>
