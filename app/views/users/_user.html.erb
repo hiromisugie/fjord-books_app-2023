@@ -12,7 +12,7 @@
 
   <p>
     <strong><%= User.human_attribute_name(:avatar) %>:</strong>
-    <%= user.avatar %>
+    <%= user.avatar.attached? ? (image_tag user.avatar) : "未登録" %>
   </p>
 
   <p>
