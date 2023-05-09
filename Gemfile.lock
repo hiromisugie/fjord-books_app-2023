@@ -321,10 +321,12 @@ DEPENDENCIES
   erb_lint
   faker
   i18n_generators
+  image_processing (~> 1.2)
   importmap-rails
   jbuilder
   kaminari
   letter_opener_web
+  mini_magick
   puma (~> 5.0)
   rails (~> 7.0.4)
   rubocop-fjord
