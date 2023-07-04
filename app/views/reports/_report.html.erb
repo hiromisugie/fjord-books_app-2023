@@ -11,7 +11,8 @@
 
   <p>
     <strong><%= Report.human_attribute_name(:content) %>:</strong>
-    <%= report.content %>
+    <%= simple_format(report.content) %>
+    <%= safe_join(report.content.split("\n"),tag(:br)) %>
   </p>
 
 </div>
