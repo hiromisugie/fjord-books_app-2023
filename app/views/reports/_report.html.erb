@@ -5,6 +5,11 @@
   </p>
 
   <p>
+    <strong>投稿者:</strong>
+    <%= report.user.name.empty? ? report.user.email : report.user.name %>
+  </p>
+
+  <p>
     <strong><%= Report.human_attribute_name(:title) %>:</strong>
     <%= report.title %>
   </p>

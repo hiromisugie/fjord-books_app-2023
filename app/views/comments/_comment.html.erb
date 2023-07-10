@@ -1,0 +1,24 @@
+
+<% if commentable.comments.any? %>
+  <p><strong>コメント一覧</strong></p>
+  <% commentable.comments.each do |comment| %>
+    <p>
+      <%= safe_join(comment.content.split("\n"),tag(:br)) %><br/>
+      <span style="display:block;text-align:right;">
+        投稿者:<%= comment.user.name.empty? ? comment.user.email : comment.user.name %> | 
+        投稿日:<%= l comment.created_at, format: :long %>
+      </span>
+    </p>
+  <% end %>
+<% else %>
+  <p>まだコメントがありません</p>
+<% end %>
+
+<p><strong>コメントする</strong><br/>
+  <%= form_with model: [commentable, Comment.new] do |f| %>  
+    <%= f.text_area :content, required: true %>
+    <div class="actions">
+      <%= f.submit "投稿" %>
+    </div>  
+  <% end %>
+</p>
