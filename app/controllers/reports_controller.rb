@@ -8,6 +8,7 @@ class ReportsController < ApplicationController
 
   # GET /reports/1 or /reports/1.json
   def show
+    @report = Report.includes(comments: :user).find(params[:id])
   end
 
   # GET /reports/new
