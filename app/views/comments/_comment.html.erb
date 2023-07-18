@@ -8,6 +8,9 @@
         投稿者:<%= comment.user.name.empty? ? comment.user.email : comment.user.name %> | 
         投稿日:<%= l comment.created_at, format: :long %>
       </span>
+      <% if current_user == comment.user %>
+        <%= button_to t('views.common.destroy', name: Comment.model_name.human.downcase), polymorphic_path([commentable, comment]), method: :delete %>
+      <% end %>
     </p>
   <% end %>
 <% else %>

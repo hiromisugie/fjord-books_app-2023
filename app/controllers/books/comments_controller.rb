@@ -1,5 +1,5 @@
 class Books::CommentsController < CommentsController
-  before_action :set_commentable, only: %i[create]
+  before_action :set_commentable, only: %i[create destroy]
 
   private
 
