@@ -3,15 +3,15 @@
   <p><strong>コメント一覧</strong></p>
   <% commentable.comments.each do |comment| %>
     <p>
-      <%= safe_join(comment.content.split("\n"),tag(:br)) %><br/>
+      <%= safe_join(comment.content.split("\n"),tag(:br)) %><br />
       <span style="display:block;text-align:right;">
-        投稿者:<%= comment.user.name.empty? ? comment.user.email : comment.user.name %> | 
+        投稿者:<%= comment.user.name.empty? ? comment.user.email : comment.user.name %> |
         投稿日:<%= l comment.created_at, format: :long %>
       </span>
       <% if current_user == comment.user %>
         <%= button_to t('views.common.destroy', name: Comment.model_name.human.downcase), polymorphic_path([commentable, comment]), method: :delete %>
       <% end %>
-      <br/>
+      <br />
     </p>
 
   <% end %>
@@ -19,11 +19,11 @@
   <p>まだコメントがありません</p>
 <% end %>
 
-<p><strong>コメントする</strong><br/>
-  <%= form_with model: [commentable, Comment.new] do |f| %>  
+<p><strong>コメントする</strong><br />
+  <%= form_with model: [commentable, Comment.new] do |f| %>
     <%= f.text_area :content, required: true %>
     <div class="actions">
       <%= f.submit "投稿" %>
-    </div>  
+    </div>
   <% end %>
 </p>

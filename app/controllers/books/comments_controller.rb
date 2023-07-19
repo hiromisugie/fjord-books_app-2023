@@ -1,6 +1,6 @@
-class Books::CommentsController < CommentsController
-  before_action :set_commentable, only: %i[create destroy]
+# frozen_string_literal: true
 
+class Books::CommentsController < CommentsController
   private
 
   def set_commentable
