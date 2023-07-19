@@ -11,7 +11,9 @@
       <% if current_user == comment.user %>
         <%= button_to t('views.common.destroy', name: Comment.model_name.human.downcase), polymorphic_path([commentable, comment]), method: :delete %>
       <% end %>
+      <br/>
     </p>
+
   <% end %>
 <% else %>
   <p>まだコメントがありません</p>
