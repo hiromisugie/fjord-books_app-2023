@@ -19,7 +19,13 @@ class ReportsController < ApplicationController
   end
 
   # GET /reports/1/edit
-  def edit; end
+  def edit
+    @report = Report.find(params[:id])
+
+    if @report.user_id != current_user.id
+      redirect_to "/reports"
+    end
+  end
 
   # POST /reports or /reports.json
   def create
