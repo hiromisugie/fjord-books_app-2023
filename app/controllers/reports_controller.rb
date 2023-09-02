@@ -23,9 +23,7 @@ class ReportsController < ApplicationController
     @report = current_user.reports.new(report_params)
 
     if @report.save
-      if @report.content.include?('http://localhost:3000/')
-        add_new_mentions
-      end
+      add_new_mentions if @report.content.include?('http://localhost:3000/')
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
       render :new, status: :unprocessable_entity
@@ -77,10 +75,7 @@ class ReportsController < ApplicationController
     mentioned_params = @report.content.scan(%r{http://localhost:3000/reports/(\d+)}).flatten.uniq
 
     @report.mentioning_reports.each do |mentioning_report|
-      unless mentioned_params.include?(mentioning_report.id.to_s)
-        @report.mentioning_reports.delete(mentioning_report)
-      end
+      @report.mentioning_reports.delete(mentioning_report) unless mentioned_params.include?(mentioning_report.id.to_s)
     end
   end
-
 end
