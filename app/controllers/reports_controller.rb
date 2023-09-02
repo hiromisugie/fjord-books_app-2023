@@ -64,6 +64,7 @@ class ReportsController < ApplicationController
 
   def add_new_mentions
     mentioned_params = @report.content.scan(%r{http://localhost:3000/reports/(\d+)}).flatten.uniq
+
     mentioned_params.each do |mentioned_param|
       unless Mention.exists?(mentioning_report_id: @report.id, mentioned_report_id: mentioned_param.to_s)
         @mention = Mention.new(mentioning_report_id: @report.id, mentioned_report_id: mentioned_param.to_s)
@@ -74,12 +75,12 @@ class ReportsController < ApplicationController
 
   def delete_mentions
     mentioned_params = @report.content.scan(%r{http://localhost:3000/reports/(\d+)}).flatten.uniq
-    mentioned_reports = @report.mentioned_reports
-    mentioned_reports.each do |mentioned_report|
-      unless mentioned_params.include?(mentioned_report.id.to_s)
-        @mention = Mention.find_by(mentioning_report_id: @report.id, mentioned_report_id: mentioned_report.id)
-        @mention.destroy
+
+    @report.mentioning_reports.each do |mentioning_report|
+      unless mentioned_params.include?(mentioning_report.id.to_s)
+        @report.mentioning_reports.delete(mentioning_report)
       end
     end
   end
+
 end
