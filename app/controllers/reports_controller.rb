@@ -22,14 +22,12 @@ class ReportsController < ApplicationController
   def create
     ActiveRecord::Base.transaction do
       @report = current_user.reports.new(report_params)
-  
+
       if @report.save
-        if @report.content.include?('http://localhost:3000/')
-          add_new_mentions
-        end
+        add_new_mentions if @report.content.include?('http://localhost:3000/')
         redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
       else
-        flash.now[:notice] = "mentionの保存に失敗したので、作成できませんでした。"
+        flash.now[:notice] = 'mentionの保存に失敗したので、作成できませんでした。'
         render :new, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
@@ -47,7 +45,7 @@ class ReportsController < ApplicationController
         end
         redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
       else
-        flash.now[:notice] = "mentionの保存に失敗したので、更新できませんでした。"
+        flash.now[:notice] = 'mentionの保存に失敗したので、更新できませんでした。'
         render :edit, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
