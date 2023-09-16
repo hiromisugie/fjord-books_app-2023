@@ -22,4 +22,22 @@ class Report < ApplicationRecord
   def created_on
     created_at.to_date
   end
+
+  def add_new_mentions
+    mentioned_params = self.content.scan(%r{http://localhost:3000/reports/(\d+)}).flatten.uniq
+
+    mentioned_params.each do |mentioned_param|
+      unless Mention.exists?(mentioning_report_id: self.id, mentioned_report_id: mentioned_param.to_s)
+        Mention.create(mentioning_report_id: self.id, mentioned_report_id: mentioned_param.to_s)
+      end
+    end
+  end
+
+  def delete_mentions
+    mentioned_params = self.content.scan(%r{http://localhost:3000/reports/(\d+)}).flatten.uniq
+
+    self.mentioning_reports.each do |mentioning_report|
+      self.mentioning_reports.delete(mentioning_report) unless mentioned_params.include?(mentioning_report.id.to_s)
+    end
+  end
 end

@@ -24,7 +24,7 @@ class ReportsController < ApplicationController
       @report = current_user.reports.new(report_params)
 
       if @report.save
-        add_new_mentions if @report.content.include?('http://localhost:3000/')
+        @report.add_new_mentions if @report.content.include?('http://localhost:3000/')
         redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
       else
         flash.now[:notice] = 'mentionの保存に失敗したので、作成できませんでした。'
@@ -38,8 +38,8 @@ class ReportsController < ApplicationController
     ActiveRecord::Base.transaction do
       if @report.update(report_params)
         if @report.content.include?('http://localhost:3000')
-          add_new_mentions
-          delete_mentions
+          @report.add_new_mentions
+          @report.delete_mentions
         else
           @report.mentioning_reports.clear
         end
@@ -68,22 +68,4 @@ class ReportsController < ApplicationController
     params.require(:report).permit(:title, :content)
   end
 
-  def add_new_mentions
-    mentioned_params = @report.content.scan(%r{http://localhost:3000/reports/(\d+)}).flatten.uniq
-
-    mentioned_params.each do |mentioned_param|
-      unless Mention.exists?(mentioning_report_id: @report.id, mentioned_report_id: mentioned_param.to_s)
-        @mention = Mention.new(mentioning_report_id: @report.id, mentioned_report_id: mentioned_param.to_s)
-        @mention.save
-      end
-    end
-  end
-
-  def delete_mentions
-    mentioned_params = @report.content.scan(%r{http://localhost:3000/reports/(\d+)}).flatten.uniq
-
-    @report.mentioning_reports.each do |mentioning_report|
-      @report.mentioning_reports.delete(mentioning_report) unless mentioned_params.include?(mentioning_report.id.to_s)
-    end
-  end
 end
