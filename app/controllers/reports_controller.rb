@@ -20,35 +20,22 @@ class ReportsController < ApplicationController
   def edit; end
 
   def create
-    ActiveRecord::Base.transaction do
-      @report = current_user.reports.new(report_params)
+    @report = current_user.reports.new(report_params)
 
-      if @report.save
-        @report.add_new_mentions if @report.content.include?('http://localhost:3000/')
-        redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
-      else
-        flash.now[:notice] = 'mentionの保存に失敗したので、作成できませんでした。'
-        render :new, status: :unprocessable_entity
-        raise ActiveRecord::Rollback
-      end
+    if @report.save_with_mentions
+      redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
+    else
+      flash.now[:notice] = 'mentionの保存に失敗したので、作成できませんでした。'
+      render :new, status: :unprocessable_entity
     end
   end
 
   def update
-    ActiveRecord::Base.transaction do
-      if @report.update(report_params)
-        if @report.content.include?('http://localhost:3000')
-          @report.add_new_mentions
-          @report.delete_mentions
-        else
-          @report.mentioning_reports.clear
-        end
-        redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
-      else
-        flash.now[:notice] = 'mentionの保存に失敗したので、更新できませんでした。'
-        render :edit, status: :unprocessable_entity
-        raise ActiveRecord::Rollback
-      end
+    if @report.update_with_mentions(report_params)
+      redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
+    else
+      flash.now[:notice] = 'mentionの保存に失敗したので、更新できませんでした。'
+      render :edit, status: :unprocessable_entity
     end
   end
 
