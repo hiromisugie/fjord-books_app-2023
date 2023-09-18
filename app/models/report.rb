@@ -29,30 +29,22 @@ class Report < ApplicationRecord
 
   def save_with_mentions
     ActiveRecord::Base.transaction do
-      if save
-        add_new_mentions if content.include?('http://localhost:3000/')
-        true
-      else
-        raise ActiveRecord::Rollback
-        false
-      end
+      return raise ActiveRecord::Rollback unless save
+
+      add_new_mentions if content.include?('http://localhost:3000/')
+      true
     end
   end
 
   def update_with_mentions(report_params)
     ActiveRecord::Base.transaction do
-      if update(report_params)
-        if content.include?('http://localhost:3000')
-          add_new_mentions
-          delete_mentions
-        else
-          mentioning_reports.clear
-        end
-        true
-      else
-        raise ActiveRecord::Rollback
-        false
+      return raise ActiveRecord::Rollback unless update(report_params)
+
+      if content.include?('http://localhost:3000/')
+        add_new_mentions
+        delete_mentions
       end
+      true
     end
   end
 
