@@ -29,24 +29,42 @@ class Report < ApplicationRecord
 
   def save_with_mentions
     ActiveRecord::Base.transaction do
-      return raise ActiveRecord::Rollback unless save
-
-      add_new_mentions if content.include?('http://localhost:3000/')
-      true
-    end
-  end
-
-  def update_with_mentions(report_params)
-    ActiveRecord::Base.transaction do
-      return raise ActiveRecord::Rollback unless update(report_params)
-
-      if content.include?('http://localhost:3000/')
-        add_new_mentions
-        delete_mentions
+      if save
+        if content.include?('http://localhost:3000/')
+          begin
+            add_new_mentions
+          rescue StandardError => e
+            Rails.logger.error("add_new_mentionsにエラーが発生しました: #{e.message}")
+            raise ActiveRecord::Rollback
+          end
+        end
+        true
+      else
+        false
       end
-      true
     end
   end
+
+  def update_with_mentions
+    ActiveRecord::Base.transaction do
+      if save
+        if content.include?('http://localhost:3000/')
+          begin
+            add_new_mentions
+            delete_mentions
+          rescue StandardError => e
+            Rails.logger.error("update_with_mentionsにエラーが発生しました: #{e.message}")
+            raise ActiveRecord::Rollback
+          end
+        end
+        true
+      else
+        false
+      end
+    end
+  end
+
+  private
 
   def add_new_mentions
     mentioned_params = extract_mentioned_params
