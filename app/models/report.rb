@@ -74,7 +74,7 @@ class Report < ApplicationRecord
     mentioned_params = extract_mentioned_params
 
     mentioning_reports.each do |mentioning_report|
-      mentioning_reports.delete(mentioning_report) unless mentioned_params.include?(mentioning_report.id.to_s)
+      mentioning_reports.destroy(mentioning_report) unless mentioned_params.include?(mentioning_report.id.to_s)
     end
   end
 end
