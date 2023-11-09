@@ -29,21 +29,22 @@ class Report < ApplicationRecord
 
   def save_with_mentions
     ActiveRecord::Base.transaction do
-      if save
+      if save!
         add_new_mentions if content.include?('http://localhost:3000/')
         true
       else
         false
       end
     end
-  rescue StandardError => e
+  rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("save_with_mentionsにエラーが発生しました: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
     false
   end
 
   def update_with_mentions
     ActiveRecord::Base.transaction do
-      if save
+      if save!
         if content.include?('http://localhost:3000/')
           add_new_mentions
           delete_mentions
@@ -53,8 +54,9 @@ class Report < ApplicationRecord
         false
       end
     end
-  rescue StandardError => e
+  rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("update_with_mentionsにエラーが発生しました: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
     false
   end
 
