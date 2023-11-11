@@ -81,7 +81,8 @@ class Report < ApplicationRecord
 
     mentioned_params.each do |mentioned_param|
       unless Mention.exists?(mentioning_report_id: id, mentioned_report_id: mentioned_param.to_s)
-        Mention.create(mentioning_report_id: id, mentioned_report_id: mentioned_param.to_s)
+        mention = Mention.new(mentioning_report_id: id, mentioned_report_id: mentioned_param.to_s)
+        raise ActiveRecord::Rollback unless mention.save
       end
     end
   end
