@@ -39,7 +39,7 @@ class Report < ApplicationRecord
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error("save_with_mentionsに業務エラーが発生しました: #{e.message}")
       result = false
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error("save_with_mentionsにシステムエラーが発生しました: #{e.message}")
       Rails.logger.error(e.backtrace.join("\n"))
       result = false
@@ -63,7 +63,7 @@ class Report < ApplicationRecord
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error("update_with_mentionsに業務エラーが発生しました: #{e.message}")
       result = false
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error("update_with_mentionsにシステムエラーが発生しました: #{e.message}")
       Rails.logger.error(e.backtrace.join("\n"))
       result = false
