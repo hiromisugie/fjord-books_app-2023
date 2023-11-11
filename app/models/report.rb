@@ -28,36 +28,50 @@ class Report < ApplicationRecord
   end
 
   def save_with_mentions
+    result = false
     ActiveRecord::Base.transaction do
-      if save!
+      if save
         add_new_mentions if content.include?('http://localhost:3000/')
-        true
+        result = true
       else
-        false
+        raise ActiveRecord::Rollback
       end
     end
   rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("save_with_mentionsにエラーが発生しました: #{e.message}")
+    Rails.logger.error("save_with_mentionsに業務エラーが発生しました: #{e.message}")
+    result = false
+  rescue => e
+    Rails.logger.error("save_with_mentionsにシステムエラーが発生しました: #{e.message}")
     Rails.logger.error(e.backtrace.join("\n"))
-    false
+    result = false
+  end
+  
+  result
   end
 
   def update_with_mentions
+    result = false
     ActiveRecord::Base.transaction do
-      if save!
+      if save
         if content.include?('http://localhost:3000/')
           add_new_mentions
           delete_mentions
         end
-        true
+        result = true
       else
-        false
+        raise ActiveRecord::Rollback
       end
     end
   rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("update_with_mentionsにエラーが発生しました: #{e.message}")
+    Rails.logger.error("update_with_mentionsに業務エラーが発生しました: #{e.message}")
+    result = false
+  rescue => e
+    Rails.logger.error("update_with_mentionsにシステムエラーが発生しました: #{e.message}")
     Rails.logger.error(e.backtrace.join("\n"))
-    false
+    result = false
+  end
+
+  result
   end
 
   private
