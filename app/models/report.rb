@@ -36,17 +36,16 @@ class Report < ApplicationRecord
       else
         raise ActiveRecord::Rollback
       end
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("save_with_mentionsに業務エラーが発生しました: #{e.message}")
+      result = false
+    rescue => e
+      Rails.logger.error("save_with_mentionsにシステムエラーが発生しました: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      result = false
     end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("save_with_mentionsに業務エラーが発生しました: #{e.message}")
-    result = false
-  rescue => e
-    Rails.logger.error("save_with_mentionsにシステムエラーが発生しました: #{e.message}")
-    Rails.logger.error(e.backtrace.join("\n"))
-    result = false
-  end
 
-  result
+    result
   end
 
   def update_with_mentions
@@ -61,17 +60,16 @@ class Report < ApplicationRecord
       else
         raise ActiveRecord::Rollback
       end
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("update_with_mentionsに業務エラーが発生しました: #{e.message}")
+      result = false
+    rescue => e
+      Rails.logger.error("update_with_mentionsにシステムエラーが発生しました: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      result = false
     end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("update_with_mentionsに業務エラーが発生しました: #{e.message}")
-    result = false
-  rescue => e
-    Rails.logger.error("update_with_mentionsにシステムエラーが発生しました: #{e.message}")
-    Rails.logger.error(e.backtrace.join("\n"))
-    result = false
-  end
 
-  result
+    result
   end
 
   private
@@ -91,7 +89,7 @@ class Report < ApplicationRecord
     mentioned_params = extract_mentioned_params
 
     mentioning_reports.each do |mentioning_report|
-      mentioning_reports.destroy(mentioning_report) unless mentioned_params.include?(mentioning_report.id.to_s)
+      mentioning_report.destroy! unless mentioned_params.include?(mentioning_report.id.to_s)
     end
   end
 end
