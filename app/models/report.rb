@@ -45,7 +45,7 @@ class Report < ApplicationRecord
     Rails.logger.error(e.backtrace.join("\n"))
     result = false
   end
-  
+
   result
   end
 
