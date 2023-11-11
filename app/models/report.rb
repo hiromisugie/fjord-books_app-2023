@@ -30,12 +30,10 @@ class Report < ApplicationRecord
   def save_with_mentions
     result = false
     ActiveRecord::Base.transaction do
-      if save
-        add_new_mentions if content.include?('http://localhost:3000/')
-        result = true
-      else
-        raise ActiveRecord::Rollback
-      end
+      raise ActiveRecord::Rollback unless save
+
+      add_new_mentions if content.include?('http://localhost:3000/')
+      result = true
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error("save_with_mentionsに業務エラーが発生しました: #{e.message}")
       result = false
@@ -51,15 +49,13 @@ class Report < ApplicationRecord
   def update_with_mentions
     result = false
     ActiveRecord::Base.transaction do
-      if save
-        if content.include?('http://localhost:3000/')
-          add_new_mentions
-          delete_mentions
-        end
-        result = true
-      else
-        raise ActiveRecord::Rollback
+      raise ActiveRecord::Rollback unless save
+
+      if content.include?('http://localhost:3000/')
+        add_new_mentions
+        delete_mentions
       end
+      result = true
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error("update_with_mentionsに業務エラーが発生しました: #{e.message}")
       result = false
