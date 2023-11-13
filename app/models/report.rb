@@ -84,8 +84,8 @@ class Report < ApplicationRecord
   def delete_mentions
     mentioned_params = extract_mentioned_params
 
-    mentioning_reports.each do |mentioning_report|
-      mentioning_report.destroy! unless mentioned_params.include?(mentioning_report.id.to_s)
+    active_mentions.each do |mention|
+      mention.destroy! unless mentioned_params.include?(mention.mentioned_report_id.to_s)
     end
   end
 end
