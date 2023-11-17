@@ -37,9 +37,6 @@ class Report < ApplicationRecord
         false
       end
     end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("save_with_mentionsに業務エラーが発生しました: #{e.message}")
-    false
   end
 
   def update_with_mentions
@@ -55,9 +52,6 @@ class Report < ApplicationRecord
         false
       end
     end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("update_with_mentionsに業務エラーが発生しました: #{e.message}")
-    false
   end
 
   private
