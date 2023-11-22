@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# one:
-#   user: one
-#   title: MyString
-#   content: MyText
+report20231123:
+  user: alice
+  title: 2023/11/23の日報
+  content: 今日も頑張りました！
 
 # two:
 #   user: two
