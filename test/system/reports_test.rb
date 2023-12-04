@@ -26,6 +26,8 @@ class ReportsTest < ApplicationSystemTestCase
     click_on '登録する'
 
     assert_text '日報が作成されました。'
+    assert_text '2023/11/23の日報'
+    assert_text '今日も頑張りました！'
   end
 
   test 'should update Report' do
