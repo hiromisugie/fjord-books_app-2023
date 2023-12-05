@@ -48,5 +48,7 @@ class ReportsTest < ApplicationSystemTestCase
     click_on 'この日報を削除'
 
     assert_text '日報が削除されました。'
+    assert_no_text '2023/11/23の日報（追記あり）'
+    assert_no_text '今日も頑張りました！明日も頑張ります！'
   end
 end
